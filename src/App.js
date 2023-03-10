@@ -3,43 +3,53 @@ import "./App.css";
 
 
 function App() {
-  const [energySelectedButton, setEnergySelectedButton] = useState(null);
-  const [athleticSelectedButton, setAthleticSelectedButton] = useState(null);
+  const [energySelectedButton, setEnergySelectedButton] = useState(3);
+  const [athleticSelectedButton, setAthleticSelectedButton] = useState(3);
   const [submitted, setSubmitted] = useState(false)
+  const [startFloor, setStartFloor] = useState(0);
+  const [endFloor, setEndFloor] = useState(0);
 
   if (!submitted) {
     return (
       <div className='app'>
-        <h1>How much energy do you have?</h1>
-        <Scale selectedButton={energySelectedButton} setSelectedButton={setEnergySelectedButton} />
-        <h1>How would you rank your athletic ability?</h1>
-        <Scale selectedButton={athleticSelectedButton} setSelectedButton={setAthleticSelectedButton} />
-        <h1>Where are you?</h1>
-        <FloorDropdown />
-        <h1>Where are you going?</h1>
-        <FloorDropdown />
-        <button onClick={() => setSubmitted(true)}>GO</button>
+        <div className="question">
+          <h1>How much energy do you have?</h1>
+          <Scale selectedButton={energySelectedButton} setSelectedButton={setEnergySelectedButton} />
+        </div>
+        <div className="question">
+          <h1>How would you rank your athletic ability?</h1>
+          <Scale selectedButton={athleticSelectedButton} setSelectedButton={setAthleticSelectedButton} />
+        </div>
+        <div className="question">
+          <h1>Where are you?</h1>
+          <FloorDropdown floor={startFloor} setFloor={setStartFloor}/>
+        </div>
+        <div className="question">
+          <h1>Where are you going?</h1>
+          <FloorDropdown floor={endFloor} setFloor={setEndFloor}/>
+        </div>
+        <button className="buttonGo" onClick={() => setSubmitted(true)}>GO</button>
       </div>
     );
   } else {
     return (
-      <div>
-        Energy: {energySelectedButton}
+      <div className='app'>
+        <button className="buttonBack" onClick={() => setSubmitted(false)}>Go back</button>
+        <br />
+        <h1>You should {endFloor - startFloor === 0 ? "stay where you are ... why are you even on this app?????" : endFloor - startFloor < 5 ? "take the stairs" : endFloor - startFloor > 0.75 * athleticSelectedButton + 1.25 * energySelectedButton ? "take the elevator" : "take the stairs"}</h1>
         <br/>
-        Athletic ability: {athleticSelectedButton}
+        <h2>{endFloor === startFloor? null : `for your ${endFloor - startFloor} flight trip`}</h2>
       </div>
     );
   }
 }
 
-function Scale(props) {
+function Scale(props) {  
+  const numbers = [1, 2, 3, 4, 5];
+
   return (
     <div className='scale'>
-      <ScaleButton value={1} selectedButton={props.selectedButton} setSelectedButton={props.setSelectedButton}></ScaleButton>
-      <ScaleButton value={2} selectedButton={props.selectedButton} setSelectedButton={props.setSelectedButton}></ScaleButton>
-      <ScaleButton value={3} selectedButton={props.selectedButton} setSelectedButton={props.setSelectedButton}></ScaleButton>
-      <ScaleButton value={4} selectedButton={props.selectedButton} setSelectedButton={props.setSelectedButton}></ScaleButton>
-      <ScaleButton value={5} selectedButton={props.selectedButton} setSelectedButton={props.setSelectedButton}></ScaleButton>
+      {numbers.map((x, _) => <ScaleButton key={x} value={x} selectedButton={props.selectedButton} setSelectedButton={props.setSelectedButton}></ScaleButton>)}
     </div>
   );
 }
@@ -52,12 +62,14 @@ function ScaleButton(props) {
   );
 }
 
-function FloorDropdown() {
+function FloorDropdown(props) {
+  const floorList = ["L","2","3","4","5","6","7","8","9","10","10M","11","12","13","14"];
+  
   return (
-    <div>
-      hi
-    </div>
-  );
+      <select className="dropdown" value={props.floor} onChange={(x) => props.setFloor(x.target.value)}>
+        {floorList.map((x,i) => <option key={i} value={i}>{x}</option>)}
+      </select>
+  )
 }
 
 
