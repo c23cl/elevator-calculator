@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/elevator-calculator/static/css/main.db34b08f.css",
+    "main.js": "/elevator-calculator/static/js/main.e8a713fc.js",
+    "index.html": "/elevator-calculator/index.html",
+    "main.db34b08f.css.map": "/elevator-calculator/static/css/main.db34b08f.css.map",
+    "main.e8a713fc.js.map": "/elevator-calculator/static/js/main.e8a713fc.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.db34b08f.css",
+    "static/js/main.e8a713fc.js"
+  ]
+}
