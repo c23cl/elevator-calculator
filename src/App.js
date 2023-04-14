@@ -1,14 +1,31 @@
+import { onAuthStateChanged } from 'firebase/auth';
 import React, { useState } from 'react';
 import "./App.css";
+import { auth, signInWithGoogle } from './firebase';
+
 
 
 function App() {
+  const [user,setuser] = useState(null);
   const [energySelectedButton, setEnergySelectedButton] = useState(3);
   const [athleticSelectedButton, setAthleticSelectedButton] = useState(3);
   const [submitted, setSubmitted] = useState(false)
   const [startFloor, setStartFloor] = useState(0);
   const [endFloor, setEndFloor] = useState(0);
 
+  onAuthStateChanged(auth, (user) => {
+    if (user && !user.email.endsWith("@dalton.org")) {
+      auth.signOut();
+      setuser(null);
+      alert("You must sign in with a Dalton email address.");
+    } else {
+      setuser(user);
+    }
+  });
+
+
+  if(user){
+    console.log(user)
   if (!submitted) {
     return (
       <div className='app'>
@@ -39,9 +56,17 @@ function App() {
         <h1>You should {endFloor - startFloor === 0 ? "stay where you are ... why are you even on this app?????" : endFloor - startFloor < 5 ? "take the stairs" : endFloor - startFloor > 0.75 * athleticSelectedButton + 1.25 * energySelectedButton ? "take the elevator" : "take the stairs"}</h1>
         <br/>
         <h2>{endFloor === startFloor? null : `for your ${endFloor - startFloor} flight trip`}</h2>
+        <button className="signOut" onClick={() => auth.signOut()}>SignOut</button>
       </div>
     );
   }
+}
+ return (
+  <div className='app'>
+    <h1>Sign in with Google</h1>
+    <button className="signIn" onClick={() => signInWithGoogle()}>Sign in</button>
+  </div>
+);
 }
 
 function Scale(props) {  
